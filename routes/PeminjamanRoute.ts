@@ -1,9 +1,10 @@
 import express from 'express';
-import {  } from '../controllers/PeminjamanController';
+import { getAllPeminjaman, createPeminjaman, updateStatusPeminjaman } from '../controllers/PeminjamanController';
 
 const router = express.Router();
 
-// router.post('/users/register', registerUser);
-// router.post('/users/login', loginUser);
+router.get('/peminjaman/getAll', getAllPeminjaman);
+router.post('/peminjaman/create', createPeminjaman);
+router.patch('/peminjaman/update/:id', updateStatusPeminjaman);
 
 export default router;
