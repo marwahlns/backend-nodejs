@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model tbl_buku {
+  id_buku        Int              @id(map: "PK_tbl_buku") @default(autoincrement())
+  judul          String?          @db.VarChar(100)
+  pengarang      String?          @db.VarChar(100)
+  tahun_terbit   DateTime?        @db.Date
+  stok           Int?
+  tbl_peminjaman tbl_peminjaman[]
+}
+
+model tbl_mahasiswa {
+  id             Int              @id(map: "PK_tbl_mahasiswa") @default(autoincrement())
+  nim            Int?             @unique(map: "UQ_Nim")
+  nama           String?          @db.VarChar(100)
+  kelas          String?          @db.VarChar(20)
+  alamat         String?          @db.Text
+  tbl_peminjaman tbl_peminjaman[]
+}
+
+model tbl_peminjaman {
+  id            Int            @id(map: "PK_tbl_peminjaman") @default(autoincrement())
+  nim           Int?
+  id_buku       Int?
+  tgl_pinjam    DateTime?      @db.Date
+  tgl_kembali   DateTime?      @db.Date
+  status        String?        @db.VarChar(15)
+  tbl_buku      tbl_buku?      @relation(fields: [id_buku], references: [id_buku], onDelete: NoAction, onUpdate: NoAction, map: "FK_tbl_peminjaman_tbl_buku1")
+  tbl_mahasiswa tbl_mahasiswa? @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "FK_tbl_peminjaman_tbl_mahasiswa")
+}
+
+model tbl_user {
+  id       Int     @id(map: "PK_tbl_user") @default(autoincrement())
+  nama     String? @db.VarChar(100)
+  username String? @db.VarChar(50)
+  password String? @db.VarChar(50)
+}
