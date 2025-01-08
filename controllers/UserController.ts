@@ -4,28 +4,54 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-export const registerUser = async (req: Request, res: Response): Promise<Response> => {
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { nama, username, password } = req.body;
 
-        // Hash password sebelum menyimpan ke database
+        // Validate request body
+        if (!nama || !username || !password) {
+            res.status(400).json({
+                message: 'Invalid input. Please provide nama, username, and password.',
+            });
+            return;
+        }
+
+        // Check if username already exists
+        const existingUser = await prisma.tbl_user.findFirst({
+            where: { username },
+        });
+        if (existingUser) {
+            res.status(409).json({
+                message: 'Username already exists. Please choose another username.',
+            });
+            return;
+        }
+
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Simpan user ke database
+        // Save the user to the database
         const user = await prisma.tbl_user.create({
             data: {
-                nama: nama,
-                username: username,
+                nama,
+                username,
                 password: hashedPassword,
             },
         });
 
-        return res.status(201).json({
+        // Return success response
+        res.status(201).json({
             message: 'User registered successfully',
-            data: user,
+            data: {
+                id: user.id,
+                nama: user.nama,
+                username: user.username,
+            },
         });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Registration failed' });
+        console.error('Error during user registration:', error);
+        res.status(500).json({
+            message: 'Registration failed. Please try again later.',
+        });
     }
 };
