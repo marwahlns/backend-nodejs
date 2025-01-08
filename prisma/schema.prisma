@@ -40,5 +40,5 @@ model tbl_user {
   id       Int     @id(map: "PK_tbl_user") @default(autoincrement())
   nama     String? @db.VarChar(100)
   username String? @db.VarChar(50)
-  password String? @db.VarChar(50)
+  password String? @db.VarChar(255)
 }
