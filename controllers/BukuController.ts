@@ -95,7 +95,7 @@ export const updateBuku = async (req: Request, res: Response): Promise<void> => 
         }
     });
     res.json({
-        message: "Updated successfully!",
+        message: "Buku updated successfully!",
         data: result
     });
 };
@@ -113,6 +113,7 @@ export const deleteBuku = async (req: Request, res: Response): Promise<void> => 
 
         res.json({
             message: "Buku deleted successfully",
+            data: deletedBuku
         });
     } catch (error: any) {
         console.error('Error during deleteBuku:', error);

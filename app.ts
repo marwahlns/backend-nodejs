@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import userRoutes from './routes/UserRoute';
 import bukuRoutes from './routes/BukuRoute';
+import mahasiswaRoutes from './routes/MahasiswaRoute';
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use('/api', userRoutes);
 app.use('/api', bukuRoutes);
+app.use('/api', mahasiswaRoutes);
 
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
