@@ -74,8 +74,6 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         // Bandingkan password yang dikirim dengan password yang tersimpan
         const passwordMatch = await bcrypt.compare(password, user.password!);
 
-        console.log('Input password:', password);
-        console.log('Hashed password from DB:', user.password);
         if (!passwordMatch) {
             res.status(401).json({ error: 'Authentication failed: incorrect password' });
             return;
