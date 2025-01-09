@@ -11,7 +11,7 @@ model tbl_buku {
   id_buku        Int              @id(map: "PK_tbl_buku") @default(autoincrement())
   judul          String?          @db.VarChar(100)
   pengarang      String?          @db.VarChar(100)
-  tahun_terbit   DateTime?        @db.Date
+  tahun_terbit   String?          @db.VarChar(4)
   stok           Int?
   tbl_peminjaman tbl_peminjaman[]
 }

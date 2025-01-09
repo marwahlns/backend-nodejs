@@ -62,7 +62,7 @@ export const createBuku = async (req: Request, res: Response): Promise<void> => 
             data: {
                 judul: judul,
                 pengarang: pengarang,
-                tahun_terbit: new Date(tahun_terbit),
+                tahun_terbit: tahun_terbit,
                 stok: Number(stok),
             },
         });
@@ -87,7 +87,7 @@ export const updateBuku = async (req: Request, res: Response): Promise<void> => 
         data: {
             judul: judul,
             pengarang: pengarang,
-            tahun_terbit: new Date(tahun_terbit),
+            tahun_terbit: new tahun_terbit,
             stok: stok
         },
         where: {
