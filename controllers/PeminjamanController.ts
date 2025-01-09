@@ -37,7 +37,7 @@ export const createPeminjaman = async (req: Request, res: Response): Promise<voi
 
         // Cek apakah mahasiswa ada
         const mahasiswa = await prisma.tbl_mahasiswa.findUnique({
-            where: { nim: Number(nim) },
+            where: { nim: nim },
         });
         if (!mahasiswa) {
             res.status(404).json({
@@ -60,7 +60,7 @@ export const createPeminjaman = async (req: Request, res: Response): Promise<voi
         // Buat data peminjaman
         const peminjaman = await prisma.tbl_peminjaman.create({
             data: {
-                nim: Number(nim),
+                nim: nim,
                 id_buku: Number(id_buku),
                 tgl_pinjam: new Date(tgl_pinjam),
                 status: 'Dipinjam',

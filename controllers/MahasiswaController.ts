@@ -24,7 +24,7 @@ export const findOneMahasiswa = async (req: Request, res: Response): Promise<voi
 
         const mahasiswa = await prisma.tbl_mahasiswa.findUnique({
             where: {
-                nim: Number(nim),
+                nim: nim,
             },
         });
 
@@ -90,7 +90,7 @@ export const updateMahasiswa = async (req: Request, res: Response): Promise<void
             alamat: alamat
         },
         where: {
-            nim: Number(nim)
+            nim: nim
         }
     });
     res.json({
@@ -106,7 +106,7 @@ export const deleteMahasiswa = async (req: Request, res: Response): Promise<void
         // Hapus mahasiswa berdasarkan id
         const deletedMahasiswa = await prisma.tbl_mahasiswa.delete({
             where: {
-                nim: Number(nim),
+                nim: nim,
             },
         });
 

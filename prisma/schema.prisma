@@ -18,7 +18,7 @@ model tbl_buku {
 
 model tbl_mahasiswa {
   id             Int              @id(map: "PK_tbl_mahasiswa") @default(autoincrement())
-  nim            Int?             @unique(map: "UQ_Nim")
+  nim            String?          @unique(map: "UQ_Nim") @db.VarChar(10)
   nama           String?          @db.VarChar(100)
   kelas          String?          @db.VarChar(20)
   alamat         String?          @db.Text
@@ -27,7 +27,7 @@ model tbl_mahasiswa {
 
 model tbl_peminjaman {
   id            Int            @id(map: "PK_tbl_peminjaman") @default(autoincrement())
-  nim           Int?
+  nim           String?        @db.VarChar(10)
   id_buku       Int?
   tgl_pinjam    DateTime?      @db.Date
   tgl_kembali   DateTime?      @db.Date
