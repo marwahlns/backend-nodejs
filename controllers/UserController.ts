@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 
 const prisma = new PrismaClient();
 
@@ -101,5 +102,31 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Login failed' });
+    }
+};
+
+export const sendEmail = async (req: Request, res: Response): Promise<void> => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+
+    const { to, subject, text } = req.body;
+
+    try {
+        await transporter.sendMail({
+            from: 'noreply', // Email pengirim
+            to: to, // Email tujuan
+            subject: subject, // Subjek email
+            text: text, // Isi email
+        });
+
+        res.status(200).json({ message: 'Email berhasil dikirim!' });
+    } catch (error) {
+        console.error('Error saat mengirim email:', error);
+        res.status(500).json({ error: 'Gagal mengirim email' });
     }
 };
