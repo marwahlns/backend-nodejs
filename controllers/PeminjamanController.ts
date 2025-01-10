@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Peminjaman } from '../models/Peminjaman';
 import { Mahasiswa } from '../models/Mahasiswa';
 import { Buku } from '../models/Buku';
+import XLSX from 'xlsx';
 
 export const getAllPeminjaman = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -113,5 +114,33 @@ export const updateStatusPeminjaman = async (req: Request, res: Response): Promi
         res.status(500).json({
             message: 'Error updating peminjaman. Please try again later.',
         });
+    }
+};
+
+export const exportExcel = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Ambil data dari database
+        const rows = await Peminjaman.findMany();
+
+        if (!rows.length) {
+            res.status(404).json({ message: 'No data found' });
+            return;
+        }
+
+        const heading = [['ID Peminjaman', 'NIM', 'ID Buku', 'Tanggal Pinjam', 'Tanggal Kembali', 'Status']];
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(rows);
+
+        XLSX.utils.sheet_add_aoa(worksheet, heading, { origin: 'A1' });
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Peminjaman');
+
+        // Konversi workbook menjadi buffer
+        const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+        res.attachment('Data Peminjaman Buku.xlsx')
+        res.send(buffer);
+    } catch (error) {
+        console.error('Error exporting Excel:', error);
+        res.status(500).json({ message: 'Failed to export Excel' });
     }
 };

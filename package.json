@@ -21,7 +21,9 @@
     "nodemailer": "^6.9.16",
     "prisma": "^6.2.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
