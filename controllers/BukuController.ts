@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Buku } from "../models/Buku";
 
 export const getAllBuku = async (req: Request, res: Response): Promise<void> => {
     try {
-        const buku = await prisma.tbl_buku.findMany();
+        const buku = await Buku.findMany;
         res.json({
             message: "Get buku successfully",
             data: buku,
@@ -22,7 +20,7 @@ export const findOneBuku = async (req: Request, res: Response): Promise<void> =>
     try {
         const { id_buku } = req.params;
 
-        const buku = await prisma.tbl_buku.findUnique({
+        const buku = await Buku.findUnique({
             where: {
                 id_buku: Number(id_buku),
             },
@@ -58,7 +56,7 @@ export const createBuku = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        const buku = await prisma.tbl_buku.create({
+        const buku = await Buku.create({
             data: {
                 judul: judul,
                 pengarang: pengarang,
@@ -83,7 +81,7 @@ export const updateBuku = async (req: Request, res: Response): Promise<void> => 
     const{id_buku} = req.params;
     const{judul, pengarang, tahun_terbit, stok} = req.body;
 
-    const result = await prisma.tbl_buku.update({
+    const result = await Buku.update({
         data: {
             judul: judul,
             pengarang: pengarang,
@@ -105,7 +103,7 @@ export const deleteBuku = async (req: Request, res: Response): Promise<void> => 
         const { id_buku } = req.params;
 
         // Hapus buku berdasarkan id_buku
-        const deletedBuku = await prisma.tbl_buku.delete({
+        const deletedBuku = await Buku.delete({
             where: {
                 id_buku: Number(id_buku),
             },

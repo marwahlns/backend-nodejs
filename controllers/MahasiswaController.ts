@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Mahasiswa } from '../models/Mahasiswa';
 
 export const getAllMahasiswa = async (req: Request, res: Response): Promise<void> => {
     try {
-        const mahasiswa = await prisma.tbl_mahasiswa.findMany();
+        const mahasiswa = await Mahasiswa.findMany();
         res.json({
             message: "Get mahasiswa successfully",
             data: mahasiswa,
@@ -22,7 +20,7 @@ export const findOneMahasiswa = async (req: Request, res: Response): Promise<voi
     try {
         const { nim } = req.params;
 
-        const mahasiswa = await prisma.tbl_mahasiswa.findUnique({
+        const mahasiswa = await Mahasiswa.findUnique({
             where: {
                 nim: nim,
             },
@@ -58,7 +56,7 @@ export const createMahasiswa = async (req: Request, res: Response): Promise<void
             return;
         }
 
-        const mahasiswa = await prisma.tbl_mahasiswa.create({
+        const mahasiswa = await Mahasiswa.create({
             data: {
                 nim: nim,
                 nama: nama,
@@ -83,7 +81,7 @@ export const updateMahasiswa = async (req: Request, res: Response): Promise<void
     const{nim} = req.params;
     const{nama, kelas, alamat} = req.body;
 
-    const result = await prisma.tbl_mahasiswa.update({
+    const result = await Mahasiswa.update({
         data: {
             nama: nama,
             kelas: kelas,
@@ -104,7 +102,7 @@ export const deleteMahasiswa = async (req: Request, res: Response): Promise<void
         const { nim } = req.params;
 
         // Hapus mahasiswa berdasarkan id
-        const deletedMahasiswa = await prisma.tbl_mahasiswa.delete({
+        const deletedMahasiswa = await Mahasiswa.delete({
             where: {
                 nim: nim,
             },

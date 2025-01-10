@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { User } from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-
-const prisma = new PrismaClient();
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -19,7 +17,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         }
 
         // Check if username already exists
-        const existingUser = await prisma.tbl_user.findFirst({
+        const existingUser = await User.findFirst({
             where: { username },
         });
         if (existingUser) {
@@ -33,7 +31,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Save the user to the database
-        const user = await prisma.tbl_user.create({
+        const user = await User.create({
             data: {
                 nama,
                 username,
@@ -64,7 +62,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         const { username, password } = req.body;
 
         // Cari user berdasarkan username menggunakan Prisma
-        const user = await prisma.tbl_user.findFirst({
+        const user = await User.findFirst({
             where: { username },
         });
         if (!user) {

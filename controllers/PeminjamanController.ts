@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Peminjaman } from '../models/Peminjaman';
+import { Mahasiswa } from '../models/Mahasiswa';
+import { Buku } from '../models/Buku';
 
 export const getAllPeminjaman = async (req: Request, res: Response): Promise<void> => {
     try {
-        const peminjaman = await prisma.tbl_peminjaman.findMany({
+        const peminjaman = await Peminjaman.findMany({
             include: {
                 tbl_mahasiswa: true, // Menyertakan data mahasiswa
                 tbl_buku: true,      // Menyertakan data buku
@@ -36,7 +36,7 @@ export const createPeminjaman = async (req: Request, res: Response): Promise<voi
         }
 
         // Cek apakah mahasiswa ada
-        const mahasiswa = await prisma.tbl_mahasiswa.findUnique({
+        const mahasiswa = await Mahasiswa.findUnique({
             where: { nim: nim },
         });
         if (!mahasiswa) {
@@ -47,7 +47,7 @@ export const createPeminjaman = async (req: Request, res: Response): Promise<voi
         }
 
         // Cek apakah buku ada
-        const buku = await prisma.tbl_buku.findUnique({
+        const buku = await Buku.findUnique({
             where: { id_buku: Number(id_buku) },
         });
         if (!buku) {
@@ -58,7 +58,7 @@ export const createPeminjaman = async (req: Request, res: Response): Promise<voi
         }
 
         // Buat data peminjaman
-        const peminjaman = await prisma.tbl_peminjaman.create({
+        const peminjaman = await Peminjaman.create({
             data: {
                 nim: nim,
                 id_buku: Number(id_buku),
@@ -84,7 +84,7 @@ export const updateStatusPeminjaman = async (req: Request, res: Response): Promi
         const { id } = req.params;
 
         // Cek apakah peminjaman ada
-        const peminjaman = await prisma.tbl_peminjaman.findUnique({
+        const peminjaman = await Peminjaman.findUnique({
             where: { id: Number(id) },
         });
 
@@ -96,7 +96,7 @@ export const updateStatusPeminjaman = async (req: Request, res: Response): Promi
         }
 
         // Update data peminjaman
-        const updatedPeminjaman = await prisma.tbl_peminjaman.update({
+        const updatedPeminjaman = await Peminjaman.update({
             where: { id: Number(id) },
             data: {
                 tgl_kembali: new Date(),
