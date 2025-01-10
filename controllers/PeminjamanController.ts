@@ -25,6 +25,28 @@ export const getAllPeminjaman = async (req: Request, res: Response): Promise<voi
     }
 };
 
+export const getDataDipinjam = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const peminjaman = await Peminjaman.findMany({
+            where: { status: 'Dipinjam' },
+            include: {
+                tbl_mahasiswa: true, // Menyertakan data mahasiswa
+                tbl_buku: true,      // Menyertakan data buku
+            },
+        });
+
+        res.json({
+            message: "Get peminjaman successfully",
+            data: peminjaman,
+        });
+    } catch (error: any) {
+        console.error('Error during get data peminjaman:', error);
+        res.status(500).json({
+            message: 'Get data failed. Please try again later.',
+        });
+    }
+};
+
 
 export const createPeminjaman = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -96,6 +118,8 @@ export const updateStatusPeminjaman = async (req: Request, res: Response): Promi
             return;
         }
 
+        const { id_buku } = peminjaman;
+
         // Update data peminjaman
         const updatedPeminjaman = await Peminjaman.update({
             where: { id: Number(id) },
@@ -105,8 +129,15 @@ export const updateStatusPeminjaman = async (req: Request, res: Response): Promi
             },
         });
 
+        await Buku.update({
+            where: { id_buku: Number(id_buku) },
+            data: {
+                stok: { increment: 1 },
+            },
+        });
+
         res.json({
-            message: "Peminjaman updated successfully",
+            message: "Peminjaman updated successfully, and book stock increased by 1",
             data: updatedPeminjaman,
         });
     } catch (error: any) {
