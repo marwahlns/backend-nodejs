@@ -3,11 +3,11 @@ import { Buku } from "../models/Buku";
 
 export const getAllBuku = async (req: Request, res: Response): Promise<void> => {
     try {
-        const buku = await Buku.findMany;
+        const buku = await Buku.findMany();
         res.json({
-            message: "Get buku successfully",
-            data: buku,
-        })
+            message: "Buku updated successfully!",
+            data: buku
+        });
     }catch (error: any){
         console.error('Error during get data buku:', error);
         res.status(500).json({
