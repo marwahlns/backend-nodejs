@@ -20,6 +20,7 @@ model tbl_mahasiswa {
   id             Int              @id(map: "PK_tbl_mahasiswa") @default(autoincrement())
   nim            String?          @unique(map: "UQ_Nim") @db.VarChar(10)
   nama           String?          @db.VarChar(100)
+  email          String?          @db.VarChar(100)
   kelas          String?          @db.VarChar(20)
   alamat         String?          @db.Text
   tbl_peminjaman tbl_peminjaman[]

@@ -47,7 +47,7 @@ export const findOneMahasiswa = async (req: Request, res: Response): Promise<voi
 
 export const createMahasiswa = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { nim, nama, kelas, alamat } = req.body;
+        const { nim, nama, email, kelas, alamat } = req.body;
 
         if (!nim || !nama || !kelas || alamat === undefined) {
             res.status(400).json({
@@ -60,6 +60,7 @@ export const createMahasiswa = async (req: Request, res: Response): Promise<void
             data: {
                 nim: nim,
                 nama: nama,
+                email: email,
                 kelas: kelas,
                 alamat: alamat,
             },
@@ -79,11 +80,12 @@ export const createMahasiswa = async (req: Request, res: Response): Promise<void
 
 export const updateMahasiswa = async (req: Request, res: Response): Promise<void> => {
     const{nim} = req.params;
-    const{nama, kelas, alamat} = req.body;
+    const{nama, email, kelas, alamat} = req.body;
 
     const result = await Mahasiswa.update({
         data: {
             nama: nama,
+            email: email,
             kelas: kelas,
             alamat: alamat
         },

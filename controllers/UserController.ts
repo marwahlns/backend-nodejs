@@ -92,6 +92,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
                 data: {
                     id: user.id,
                     nama: user.nama,
+                    username: user.username,
                     token: token,
                 },
             });

@@ -3,6 +3,8 @@ import { Peminjaman } from '../models/Peminjaman';
 import { Mahasiswa } from '../models/Mahasiswa';
 import { Buku } from '../models/Buku';
 import XLSX from 'xlsx';
+import nodemailer from 'nodemailer';
+
 
 export const getAllPeminjaman = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -102,6 +104,30 @@ export const createPeminjaman = async (req: Request, res: Response): Promise<voi
     }
 };
 
+const sendEmail = async (to: string, subject: string, text: string): Promise<void> => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+
+    try {
+        await transporter.sendMail({
+            from: 'noreply@library.com', // Email pengirim
+            to, // Email tujuan
+            subject, // Subjek email
+            text, // Isi email
+        });
+
+        console.log(`Email berhasil dikirim ke: ${to}`);
+    } catch (error) {
+        console.error('Error saat mengirim email:', error);
+        throw new Error('Gagal mengirim email');
+    }
+};
+
 export const updateStatusPeminjaman = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -109,16 +135,17 @@ export const updateStatusPeminjaman = async (req: Request, res: Response): Promi
         // Cek apakah peminjaman ada
         const peminjaman = await Peminjaman.findUnique({
             where: { id: Number(id) },
+            include: { tbl_mahasiswa: true }
         });
 
         if (!peminjaman) {
-            res.status(404).json({
+                res.status(404).json({
                 message: `Peminjaman with ID ${id} not found`,
             });
             return;
         }
 
-        const { id_buku } = peminjaman;
+        const { id_buku, tbl_mahasiswa } = peminjaman;
 
         // Update data peminjaman
         const updatedPeminjaman = await Peminjaman.update({
@@ -135,6 +162,13 @@ export const updateStatusPeminjaman = async (req: Request, res: Response): Promi
                 stok: { increment: 1 },
             },
         });
+
+        // Kirim email pemberitahuan
+        if (tbl_mahasiswa && tbl_mahasiswa.email) {
+            const subject = 'Pengembalian Buku Berhasil';
+            const emailText = `Halo ${tbl_mahasiswa.nama},\n\nBuku yang Anda pinjam telah berhasil dikembalikan. Terima kasih!`;
+            await sendEmail(tbl_mahasiswa.email, subject, emailText);
+        }
 
         res.json({
             message: "Peminjaman updated successfully, and book stock increased by 1",
