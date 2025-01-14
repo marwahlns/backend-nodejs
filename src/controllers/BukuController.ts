@@ -85,7 +85,7 @@ export const updateBuku = async (req: Request, res: Response): Promise<void> => 
         data: {
             judul: judul,
             pengarang: pengarang,
-            tahun_terbit: new tahun_terbit,
+            tahun_terbit: tahun_terbit,
             stok: stok
         },
         where: {

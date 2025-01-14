@@ -92,6 +92,13 @@ export const createPeminjaman = async (req: Request, res: Response): Promise<voi
             },
         });
 
+        await Buku.update({
+            where: { id_buku: Number(id_buku) },
+            data: {
+                stok: { decrement: 1 },
+            },
+        });
+
         res.status(201).json({
             message: "Peminjaman created successfully",
             data: peminjaman,
